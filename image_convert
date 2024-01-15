@@ -1,0 +1,21 @@
+from PIL import Image
+import numpy as np
+
+# 画像パス
+image_path = './EPDzVrtU0AUkFKH.jpg'
+original_image = Image.open(image_path)
+
+# グレースケールに変換
+gray_image = original_image.convert('L')
+
+# 色変換
+blue_tinted_image = np.array(gray_image)
+blue_tinted_image = np.stack((blue_tinted_image * 0.5, blue_tinted_image * 0.5, blue_tinted_image), axis=-1)
+
+# arrayを画像に変換
+blue_tinted_image = Image.fromarray(np.uint8(blue_tinted_image))
+
+# 保存場所パスと名前
+output_path = './blue_tinted_image.jpg'
+blue_tinted_image.save(output_path)
+output_path
