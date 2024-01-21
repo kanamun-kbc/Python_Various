@@ -1,0 +1,52 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>動物検索</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/search_style.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>プロフィール設定</h1>
+        <p>動物図鑑SNSへようこそ</p>
+        <p>動物を設定してください</p>
+        <input type="text" id="animal-search" placeholder="動物選択">
+        <ul id="suggestion-list"></ul>
+        <button id="next-button">次へ</button>
+    </div>
+
+    <script>
+        $(function() {
+            $("#animal-search").on('input', function() {
+                const query = $(this).val();
+                if (!query) {
+                    $("#suggestion-list").empty();
+                    return;
+                }
+                $.ajax({
+                    url: '/animal/search/',
+                    data: { 'term': query },
+                    dataType: 'json',
+                    success: function(data) {
+                        let suggestionList = $("#suggestion-list");
+                        suggestionList.empty();
+                        if(data.length) {
+                            data.forEach(function(item) {
+                                suggestionList.append($("<li>").text(item));
+                            });
+                        }
+                    }
+                });
+            });
+
+            $(document).on('click', '#suggestion-list li', function() {
+                $("#animal-search").val($(this).text());
+                $("#suggestion-list").empty();
+            });
+        });
+    </script>
+</body>
+</html>
